@@ -1,20 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   View,
+  Platform,
   Text,
   Button,
   ScrollView,
   StyleSheet,
   Alert,
   FlatList,
-  TouchableOpacity
-} from 'react-native';
+  Container,
+  TouchableOpacity, TextInput, Image
+} from 'react-native'; 
 import { ListItem } from 'react-native-elements';
 import { TabNavigator } from 'react-navigation';
 import SearchInput, { createFilter } from 'react-native-search-filter';
-import Icon from 'react-native-vector-icons/Feather';
+//import Icon from 'react-native-vector-icons/Feather';
 import name from './name';
+import  firebase from './components/firebase';
+import { Ionicons,Icon } from 'react-native-elements';
 const KEYS_TO_FILTERS = ['item.name', 'name'];
+import { Content, Header, Form, Input, Item, Label } from 'native-base'
 
 const list = [
   {
@@ -30,6 +35,41 @@ const list = [
 ];
 
 class MyAccount extends React.Component{
+   constructor(props) {
+    super(props)
+
+    this.state = ({
+        email:'',
+        password:''
+    })
+  }
+  signUpUser = (email, password) => {
+    try{
+      if(this.state.password.length<6)
+      {
+        alert("Please enter atleast 6 characters")
+        return;
+      }
+
+    firebase.auth().createUserWithEmailAndPassword(email.trim(), password)  
+    }
+    catch(error){
+      console.log(error.toString())
+    }
+  }
+
+
+  loginUser = (email, password) =>{
+
+    try{
+        firebase.auth().signInWithEmailAndPassword(email, password).then(function(user){
+          console.log(user)
+        })
+    }
+    catch(error){
+      console.log(error.toString())
+    }
+  }
   _onPressButton(item) {
     Alert.alert(item.info);
   }
@@ -48,7 +88,45 @@ class MyAccount extends React.Component{
           title="Go to Comment"
           onPress={() => this.props.navigation.navigate('Comment')}
         />
+ <Container style={styles.container}>
+      <Image style={styles.logo} source={require("https://www.freelogodesign.org/Content/img/logo.png")}/>
+        <Text>Login</Text>
+        <Form>
+        <Item>
+          <TextInput style={styles.form}
+            placeholder="email@example.com"
+            underlineColorAndroid='transparent'
+            type="text"
+            autoCorrect={false}
+            autoCapitalize="none"
+            onChangeText={(email) => this.setState({email})}
+            />
 
+        </Item>
+        
+        <Item>
+          <TextInput style={styles.form}
+            secureTextEntry={true}
+            autoCapitalize="none"
+            placeholder="senha"
+            underlineColorAndroid='transparent'
+            type="password"
+            onChangeText={(password) => this.setState({password})}
+            />
+        </Item>
+
+        <TouchableOpacity style={styles.btn}
+        onPress={()=> this.loginUser(this.state.email, this.state.password)}
+        >
+        <Text style={styles.textinput}>Login</Text>
+        </TouchableOpacity>
+      <TouchableOpacity style={styles.btn}
+          onPress={()=> this.signUpUser(this.state.email, this.state.password)}        
+        >
+        <Text style={styles.textinput}>Cadastra</Text>
+      </TouchableOpacity>
+        </Form>
+      </Container>
       </View>
     );
   }
@@ -154,7 +232,42 @@ const styles = StyleSheet.create({
   buttonDel: {
     boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
     marginLeft: '100%'
-  }
+  },
+   logo:{
+  height: 112,
+  width: 125,
+  marginTop: 60,
+  marginBottom: 25,
+},
+
+  form: {
+    marginTop: 10,
+    height: 50,
+    width: 250,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    fontSize: 20,
+  },
+
+  btn: {
+    alignItems: 'center',
+    marginTop: 10,
+    width: 250,
+    padding: 10,
+    borderRadius: 7,
+    backgroundColor: 'red',
+},
+textinput:{
+    alignItems: 'center',
+    fontSize: 20,
+    justifyContent: 'center',
+    color: 'white',
+    textAlign: 'center',
+  },
 });
 
 const AppNative = TabNavigator(
