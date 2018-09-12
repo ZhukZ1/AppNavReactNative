@@ -1,19 +1,12 @@
 {
-  "name": "appnative",
-  "version": "0.0.0",
-  "author": "ViraZ",
-  "private": true,
   "dependencies": {
-    "expo": "^26.0.0",
-    "react": "16.3.0-alpha.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-26.0.0.tar.gz",
     "@expo/vector-icons": "6.2.1",
     "downshift": "2.2.2",
     "firebase": "5.4.2",
     "native-base": "2.8.0",
     "react-native-elements": "0.18.5",
     "react-native-search-filter": "0.1.4",
-    "react-native-vector-icons": "5.0.0",
+    "react-native-vector-icons/Feather": "5.0.0",
     "react-navigation": "1.5.11"
   }
 }
